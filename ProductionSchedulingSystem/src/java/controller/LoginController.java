@@ -38,7 +38,7 @@ public class LoginController extends HttpServlet {
             UserDAO d = new UserDAO();
             User loginUser = d.checkLogin(username, password);
             if (loginUser == null) {
-                request.setAttribute("ERROR", "Incorrect username or password!");
+                request.setAttribute("ERROR", "Tên đăng nhập hoặc mật khẩu không đúng");
                 request.getRequestDispatcher("login.jsp").forward(request, response);
                 return;
             } else {

@@ -1,3 +1,4 @@
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -25,12 +26,14 @@
                     <option value="K3">K3 (22:00 - 6:00)</option>
                 </select>
                 <br>
-                
-                <label for="shift">Xưởng</label>
-                <select id="shift" name="shift">
-                    <option value="K1">K1 (6:00 - 14:00)</option>
-                    <option value="K2">K2 (14:00 - 22:00)</option>
-                    <option value="K3">K3 (22:00 - 6:00)</option>
+
+                <label for="department">Xưởng</label>
+                <select id="department" name="did">
+                    <c:forEach var="o" items="${departments}">
+                        <option value="${o.dId}">${o.dName}</option>
+
+                    </c:forEach>
+
                 </select>
 
                 <label for="date">Ngày sản xuất:</label>

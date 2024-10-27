@@ -11,7 +11,7 @@
             <h1>Hệ Thống Quản Lý Kế Hoạch Sản Xuất</h1>
             <nav>
                 <ul>
-                    <li><a href="plan_management.jsp">Quản Lý Kế Hoạch Sản Xuất</a></li>
+                    <li><a href="managePlan">Quản Lý Kế Hoạch Sản Xuất</a></li>
                     <li><a href="worker_assignment.jsp">Phân Công Công Việc</a></li>
                     <li><a href="attendance_tracking.jsp">Chấm Công Công Nhân</a></li>
                     <li><a href="monthly_report.jsp">Báo Cáo Lương Cuối Tháng</a></li>
