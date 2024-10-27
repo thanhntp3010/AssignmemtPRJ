@@ -4,12 +4,18 @@
  */
 package controller;
 
+import dao.UserDAO;
+import entity.User;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class LoginController extends HttpServlet {
 
@@ -24,18 +30,25 @@ public class LoginController extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet LoginController</title>");            
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet LoginController at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
+        try {
+            response.setContentType("text/html;charset=UTF-8");
+            String username = request.getParameter("username");
+            String password = request.getParameter("password");
+
+            UserDAO d = new UserDAO();
+            User loginUser = d.checkLogin(username, password);
+            if (loginUser == null) {
+                request.setAttribute("ERROR", "Incorrect username or password!");
+                request.getRequestDispatcher("login.jsp").forward(request, response);
+                return;
+            } else {
+                HttpSession session = request.getSession();
+                session.setAttribute("LOGIN_USER", loginUser);
+                request.getRequestDispatcher("header.jsp").forward(request, response);
+                
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

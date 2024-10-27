@@ -6,7 +6,8 @@
         <title>Đăng Nhập</title>
     </head>
     <body>
-        <form action="loginServlet" method="post">
+        <form action="login" method="post">
+            <p style="color: red;">${ERROR}</p>
             <label for="username">Tên đăng nhập:</label>
             <input type="text" id="username" name="username" required><br>
 
