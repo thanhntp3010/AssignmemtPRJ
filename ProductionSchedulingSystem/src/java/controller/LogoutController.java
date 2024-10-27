@@ -4,18 +4,16 @@
  */
 package controller;
 
-import dao.DepartmentDAO;
-import entity.Department;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
-import java.util.List;
+import jakarta.servlet.http.HttpSession;
 
-public class ManagePlanController extends HttpServlet {
+
+public class LogoutController extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -29,12 +27,11 @@ public class ManagePlanController extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        List<Department> departments = new ArrayList<>();
-        DepartmentDAO d = new DepartmentDAO();
-        departments = d.getAllWorkshop();
-        
-        request.setAttribute("departments", departments);
-        request.getRequestDispatcher("plan_management.jsp").forward(request, response);
+        HttpSession session = request.getSession();
+        if (session != null) {
+            session.invalidate();
+            request.getRequestDispatcher("login.jsp").forward(request, response);
+        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
