@@ -12,32 +12,23 @@
         <div class="container">
             <jsp:include page="header.jsp" />
             <h2>Quản Lý Kế Hoạch Sản Xuất</h2>
-            <form id="productionPlanForm">
-                <label for="productName">Tên sản phẩm:</label>
-                <input type="text" id="productName" name="productName" required>
-
-                <label for="quantity">Số lượng:</label>
-                <input type="number" id="quantity" name="quantity" required>
-
-                <label for="shift">Ca làm việc:</label>
-                <select id="shift" name="shift">
-                    <option value="K1">K1 (6:00 - 14:00)</option>
-                    <option value="K2">K2 (14:00 - 22:00)</option>
-                    <option value="K3">K3 (22:00 - 6:00)</option>
-                </select>
-                <br>
+            <form action="addPlan" method="POST">
+                <label for="name">Tên kế hoạch</label>
+                <input type="text" id="name" name="name" required>
 
                 <label for="department">Xưởng</label>
                 <select id="department" name="did">
                     <c:forEach var="o" items="${departments}">
                         <option value="${o.dId}">${o.dName}</option>
-
                     </c:forEach>
 
                 </select>
 
-                <label for="date">Ngày sản xuất:</label>
-                <input type="date" id="date" name="date" required>
+                <label for="date">Ngày bắt đầu</label>
+                <input type="date" id="date" name="startDate" required>
+
+                <label for="date">Ngày kết thúc</label>
+                <input type="date" id="date" name="endDate" required>
 
                 <button type="submit">Thêm Kế Hoạch</button>
             </form>
@@ -45,11 +36,23 @@
             <h3>Danh sách kế hoạch sản xuất</h3>
             <table id="productionPlansTable">
                 <tr>
-                    <th>Sản phẩm</th>
-                    <th>Số lượng</th>
-                    <th>Ca làm việc</th>
-                    <th>Ngày sản xuất</th>
-                </tr>
+                    <th>Tên kế hoạch</th>
+                    <th>Xưởng sản xuất</th>
+                    <th>Ngày bắt đầu</th>
+                    <th>Ngày kết thúc</th>
+                    <th>Chi tiết</th>
+                    <th>Hành động</th>
+                        <c:forEach var="o" items="${plans}">
+                    <tr>
+                        <td>${o.plName}</td>
+                        <td>${o.department.dName}</td>
+                        <td>${o.startDate}</td>
+                        <td>${o.endDate}</td>
+                        <td>${o.plId}</td>
+                        <td>${o.plId}</td>
+                    </tr>
+                </c:forEach>
+
             </table>
         </div>
     </body>

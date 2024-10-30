@@ -25,10 +25,10 @@ public class PlanDAO {
 
             while (rs.next()) {
                 Plan plan = new Plan();
-                plan.setPlId(rs.getInt("plid")); 
-                plan.setPlName(rs.getString("plname")); 
-                plan.setStartDate(rs.getString("startdate")); 
-                plan.setEndDate(rs.getString("enddate")); 
+                plan.setPlId(rs.getInt("plid"));
+                plan.setPlName(rs.getString("plname"));
+                plan.setStartDate(rs.getString("startdate"));
+                plan.setEndDate(rs.getString("enddate"));
 
                 int departmentId = rs.getInt("did");
                 DepartmentDAO departmentDAO = new DepartmentDAO();
@@ -41,6 +41,25 @@ public class PlanDAO {
             ex.printStackTrace();
         }
         return plans;
+    }
+
+    public boolean addPlan(Plan plan) {
+        String query = "INSERT INTO [Plans] ([plname], [startdate], [enddate], [did]) VALUES (?, ?, ?, ?)";
+        boolean isSuccess = false;
+
+        try (PreparedStatement pstmt = DBUtils.getConnection1().prepareStatement(query)) {
+            pstmt.setString(1, plan.getPlName());
+            pstmt.setString(2, plan.getStartDate());
+            pstmt.setString(3, plan.getEndDate());
+            pstmt.setInt(4, plan.getdId());
+
+            int rowsAffected = pstmt.executeUpdate();
+            isSuccess = (rowsAffected > 0);
+        } catch (SQLException | ClassNotFoundException ex) {
+            ex.printStackTrace();
+        }
+
+        return isSuccess;
     }
 
 }

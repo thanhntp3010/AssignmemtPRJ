@@ -4,22 +4,17 @@
  */
 package controller;
 
-import dao.DepartmentDAO;
 import dao.PlanDAO;
-import dao.ProductDAO;
-import entity.Department;
 import entity.Plan;
-import entity.Product;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
-import java.util.List;
 
-public class ManagePlanController extends HttpServlet {
+
+public class AddPlanController extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -33,22 +28,17 @@ public class ManagePlanController extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        List<Department> departments = new ArrayList<>();
-        DepartmentDAO d = new DepartmentDAO();
-        departments = d.getAllWorkshop();
         
-        ProductDAO pd = new ProductDAO();
-        List<Product> products = new ArrayList<>();
-        products = pd.getAllProduct();
+        String name = request.getParameter("name");
+        int dId = Integer.parseInt(request.getParameter("did"));
+        String startDate = request.getParameter("startDate");
+        String endDate = request.getParameter("endDate");
         
-        PlanDAO pldao = new PlanDAO();
-        List<Plan> plans = new ArrayList<>();
-        plans = pldao.getAllPlan();
+        PlanDAO d = new PlanDAO();
+        d.addPlan(new Plan(name, startDate, endDate, dId));
         
-        request.setAttribute("departments", departments);
-        request.setAttribute("products", products);
-        request.setAttribute("plans", plans);
-        request.getRequestDispatcher("plan_management.jsp").forward(request, response);
+        response.sendRedirect("managePlan");
+        
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
