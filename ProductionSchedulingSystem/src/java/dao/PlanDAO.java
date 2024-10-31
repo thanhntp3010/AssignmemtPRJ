@@ -6,6 +6,7 @@ package dao;
 
 import entity.Department;
 import entity.Plan;
+import entity.PlanHeader;
 import entity.Product;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -52,6 +53,25 @@ public class PlanDAO {
             pstmt.setString(2, plan.getStartDate());
             pstmt.setString(3, plan.getEndDate());
             pstmt.setInt(4, plan.getdId());
+
+            int rowsAffected = pstmt.executeUpdate();
+            isSuccess = (rowsAffected > 0);
+        } catch (SQLException | ClassNotFoundException ex) {
+            ex.printStackTrace();
+        }
+
+        return isSuccess;
+    }
+
+    public boolean createPlanHeader(PlanHeader planHeader) {
+        String query = "INSERT INTO [PlanHeaders] ([plid], [pid], [quantity], [estimatedeffort]) VALUES (?, ?, ?, ?)";
+        boolean isSuccess = false;
+
+        try (PreparedStatement pstmt = DBUtils.getConnection1().prepareStatement(query)) {
+            pstmt.setInt(1, planHeader.getPlId());
+            pstmt.setInt(2, planHeader.getpId());
+            pstmt.setInt(3, planHeader.getQuantity());
+            pstmt.setFloat(4, planHeader.getEstimatedEffort());
 
             int rowsAffected = pstmt.executeUpdate();
             isSuccess = (rowsAffected > 0);
