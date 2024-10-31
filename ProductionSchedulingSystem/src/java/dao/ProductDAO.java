@@ -30,11 +30,32 @@ public class ProductDAO {
                 product.setpId(rs.getInt("pid"));
                 product.setpName(rs.getString("pname"));
                 product.setDescription(rs.getString("description"));
-                
+
                 products.add(product);
             }
         } catch (SQLException | ClassNotFoundException ex) {
         }
         return products;
     }
+
+    public Product getProductById(int productId) {
+        Product product = null;
+        String query = "SELECT [pid], [pname], [description] FROM [Products] WHERE [pid] = ?";
+
+        try (PreparedStatement pstmt = DBUtils.getConnection1().prepareStatement(query)) {
+            pstmt.setInt(1, productId);
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                product = new Product();
+                product.setpId(rs.getInt("pid"));
+                product.setpName(rs.getString("pname"));
+                product.setDescription(rs.getString("description"));
+            }
+        } catch (SQLException | ClassNotFoundException ex) {
+            ex.printStackTrace();
+        }
+        return product;
+    }
+
 }
