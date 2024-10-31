@@ -63,6 +63,34 @@ public class PlanDAO {
         return isSuccess;
     }
 
+    public List<PlanHeader> getPlanHeadersByPlanId(int planId) {
+        List<PlanHeader> planHeaders = new ArrayList<>();
+        String query = "SELECT phid, plid, pid, quantity, estimatedeffort FROM PlanHeaders WHERE plid = ?";
+
+        try (PreparedStatement pstmt = DBUtils.getConnection1().prepareStatement(query)) {
+            pstmt.setInt(1, planId);
+            ResultSet rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                PlanHeader planHeader = new PlanHeader();
+                planHeader.setPhId(rs.getInt("phid"));
+                planHeader.setPlId(rs.getInt("plid"));
+                planHeader.setpId(rs.getInt("pid"));
+                planHeader.setQuantity(rs.getInt("quantity"));
+                planHeader.setEstimatedEffort(rs.getFloat("estimatedeffort"));
+
+                ProductDAO productDAO = new ProductDAO();
+                Product product = productDAO.getProductById(planHeader.getpId());
+                planHeader.setProductName(product.getpName());
+
+                planHeaders.add(planHeader);
+            }
+        } catch (SQLException | ClassNotFoundException ex) {
+            ex.printStackTrace();
+        }
+        return planHeaders;
+    }
+
     public boolean createPlanHeader(PlanHeader planHeader) {
         String query = "INSERT INTO [PlanHeaders] ([plid], [pid], [quantity], [estimatedeffort]) VALUES (?, ?, ?, ?)";
         boolean isSuccess = false;

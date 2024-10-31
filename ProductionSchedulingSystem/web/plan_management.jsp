@@ -54,7 +54,12 @@
                                 Gán đầu việc
                             </button>
                         </td>
-                        <td>Chi tiết</td>
+                        <td>
+                            <button type="button" class="btn btn-info view-detail-btn" data-toggle="modal" data-target="#viewDetailModal" data-planid="${o.plId}">
+                                Chi tiết
+                            </button>
+                        </td>
+
                         <td>
                             <a href="editPlan?id=${o.plId}">Sửa</a> | <a href="deletePlan?id=${o.plId}">Xóa</a>
                         </td>
@@ -85,7 +90,7 @@
 
                             <label for="quantity">Số lượng:</label>
                             <input type="number" id="quantity" name="quantity" class="form-control" required>
-                            
+
                             <label for="estimatedeffort">Ước lượng:</label>
                             <input type="number" id="estimatedeffort" name="estimatedeffort" class="form-control" required>
                         </div>
@@ -107,4 +112,64 @@
             });
         </script>
     </body>
+    <div class="modal fade" id="viewDetailModal" tabindex="-1" aria-labelledby="viewDetailModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="viewDetailModalLabel">Chi Tiết Đầu Việc</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>ID Đầu Việc</th>
+                                <th>Tên Sản Phẩm</th>
+                                <th>Số Lượng</th>
+                                <th>Ước Lượng Công Việc</th>
+                            </tr>
+                        </thead>
+                        <tbody id="taskDetailsBody">
+                            <!-- Dữ liệu sẽ được điền từ AJAX -->
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        $(document).on('click', '.view-detail-btn', function () {
+            var planId = $(this).data('planid');
+
+            $.ajax({
+                url: 'getPlanHeaders', 
+                type: 'GET',
+                data: {planId: planId},
+                success: function (response) {
+                    $('#taskDetailsBody').empty();
+
+                    response.forEach(function (task) {
+                        var row = `
+                        <tr>
+                            <td>${task.phId}</td>
+                            <td>${task.productName}</td>
+                            <td>${task.quantity}</td>
+                            <td>${task.estimatedEffort}</td>
+                        </tr>`;
+                        $('#taskDetailsBody').append(row);
+                    });
+                },
+                error: function () {
+                    alert('Không thể tải chi tiết đầu việc.');
+                }
+            });
+        });
+    </script>
+
+
 </html>

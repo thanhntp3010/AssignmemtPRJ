@@ -11,6 +11,7 @@ public class PlanHeader {
     private int pId;
     private int quantity;
     private float estimatedEffort;
+    private String productName;
 
     public PlanHeader() {
     }
@@ -21,8 +22,15 @@ public class PlanHeader {
         this.quantity = quantity;
         this.estimatedEffort = estimatedEffort;
     }
-    
 
+    public String getProductName() {
+        return productName;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
+    
     public PlanHeader(int phId, int plId, int pId, int quantity, float estimatedEffort) {
         this.phId = phId;
         this.plId = plId;
