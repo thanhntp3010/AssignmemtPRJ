@@ -7,6 +7,9 @@
         <title>Quản Lý Kế Hoạch Sản Xuất</title>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
         <link rel="stylesheet" href="styles.css">
+
+        <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     </head>
     <body>
         <div class="container">
@@ -61,12 +64,99 @@
                         </td>
 
                         <td>
-                            <a href="editPlan?id=${o.plId}">Sửa</a> | <a href="deletePlan?id=${o.plId}">Xóa</a>
+                            <button type="button" class="btn btn-warning edit-plan-btn" data-toggle="modal" data-target="#editPlanModal" data-planid="${o.plId}" data-name="${o.plName}" data-department="${o.department.dId}" data-startdate="${o.startDate}" data-enddate="${o.endDate}">
+                                Sửa
+                            </button> 
+                            <button type="button" class="btn btn-danger delete-plan-btn" data-toggle="modal" data-target="#deletePlanModal" data-planid="${o.plId}">
+                                Xóa
+                            </button>
                         </td>
                     </tr>
                 </c:forEach>
             </table>
         </div>
+
+        <!-- Modal Sửa kế hoạch -->
+        <div class="modal fade" id="editPlanModal" tabindex="-1" role="dialog" aria-labelledby="editPlanModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <form id="editPlanForm" action="editPlan" method="POST">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="editPlanModalLabel">Sửa Kế Hoạch</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <input type="hidden" id="editPlanId" name="id">
+                            <label for="editName">Tên kế hoạch</label>
+                            <input type="text" id="editName" name="name" required><br>
+
+                            <label for="editDepartment">Xưởng</label>
+                            <select id="editDepartment" name="did">
+                                <c:forEach var="o" items="${departments}">
+                                    <option value="${o.dId}">${o.dName}</option>
+                                </c:forEach>
+                            </select><br>
+
+                            <label for="editStartDate">Ngày bắt đầu</label>
+                            <input type="date" id="editStartDate" name="startDate" required><br>
+
+                            <label for="editEndDate">Ngày kết thúc</label>
+                            <input type="date" id="editEndDate" name="endDate" required>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                            <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Xóa kế hoạch -->
+        <div class="modal fade" id="deletePlanModal" tabindex="-1" role="dialog" aria-labelledby="deletePlanModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="deletePlanModalLabel">Xóa Kế Hoạch</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        Bạn có chắc chắn muốn xóa kế hoạch này không?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+                        <a href="#" id="confirmDeleteBtn" class="btn btn-danger">Xóa</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script>
+            $(document).on('click', '.edit-plan-btn', function () {
+                var planId = $(this).data('planid');
+                var name = $(this).data('name');
+                var departmentId = $(this).data('department');
+                var startDate = $(this).data('startdate');
+                var endDate = $(this).data('enddate');
+
+                $('#editPlanId').val(planId);
+                $('#editName').val(name);
+                $('#editDepartment').val(departmentId);
+                $('#editStartDate').val(startDate);
+                $('#editEndDate').val(endDate);
+            });
+
+            $(document).on('click', '.delete-plan-btn', function () {
+                var planId = $(this).data('planid');
+
+                $('#confirmDeleteBtn').attr('href', 'deletePlan?id=' + planId);
+            });
+
+        </script>
+
 
         <div class="modal fade" id="assignTaskModal" tabindex="-1" aria-labelledby="assignTaskModalLabel" aria-hidden="true">
             <div class="modal-dialog">
@@ -103,8 +193,6 @@
             </div>
         </div>
 
-        <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
         <script>
             $(document).on('click', '.assign-task-btn', function () {
                 var planId = $(this).data('planid');
@@ -126,13 +214,12 @@
                         <thead>
                             <tr>
                                 <th>ID Đầu Việc</th>
-                                <th>Tên Sản Phẩm</th>
+                                <th>Sản Phẩm</th>
                                 <th>Số Lượng</th>
                                 <th>Ước Lượng Công Việc</th>
                             </tr>
                         </thead>
                         <tbody id="taskDetailsBody">
-                            <!-- Dữ liệu sẽ được điền từ AJAX -->
                         </tbody>
                     </table>
                 </div>
@@ -147,28 +234,34 @@
             var planId = $(this).data('planid');
 
             $.ajax({
-                url: 'getPlanHeaders', 
+                url: 'planHeader',
                 type: 'GET',
                 data: {planId: planId},
+                dataType: 'json',
                 success: function (response) {
+                    console.log("Response:", response);
                     $('#taskDetailsBody').empty();
 
-                    response.forEach(function (task) {
-                        var row = `
-                        <tr>
-                            <td>${task.phId}</td>
-                            <td>${task.productName}</td>
-                            <td>${task.quantity}</td>
-                            <td>${task.estimatedEffort}</td>
-                        </tr>`;
-                        $('#taskDetailsBody').append(row);
-                    });
+                    if (Array.isArray(response)) {
+                        response.forEach(function (task) {
+                            console.log("Task:", task);
+
+                            var row = "<tr><td>" + task.phId + "</td><td>" + task.productName + "</td><td>" + task.quantity + "</td><td>" + task.estimatedEffort + "</td></tr>";
+
+                            $('#taskDetailsBody').append(row);
+                            console.log(row);
+                        });
+                    } else {
+                        console.warn("Response is not an array");
+                    }
                 },
-                error: function () {
+                error: function (xhr, status, error) {
+                    console.error("Error:", status, error);
                     alert('Không thể tải chi tiết đầu việc.');
                 }
             });
         });
+
     </script>
 
 
