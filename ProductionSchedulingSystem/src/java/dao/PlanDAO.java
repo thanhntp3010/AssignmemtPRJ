@@ -90,6 +90,11 @@ public class PlanDAO {
         }
         return planHeaders;
     }
+    
+    public static void main(String[] args) {
+        PlanDAO d = new PlanDAO();
+        System.out.println(d.getPlanHeadersByPlanId(1));
+    }
 
     public boolean createPlanHeader(PlanHeader planHeader) {
         String query = "INSERT INTO [PlanHeaders] ([plid], [pid], [quantity], [estimatedeffort]) VALUES (?, ?, ?, ?)";
