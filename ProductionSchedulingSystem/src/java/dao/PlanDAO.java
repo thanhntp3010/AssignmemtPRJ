@@ -90,7 +90,7 @@ public class PlanDAO {
         }
         return planHeaders;
     }
-    
+
     public static void main(String[] args) {
         PlanDAO d = new PlanDAO();
         System.out.println(d.getPlanHeadersByPlanId(1));
@@ -105,6 +105,26 @@ public class PlanDAO {
             pstmt.setInt(2, planHeader.getpId());
             pstmt.setInt(3, planHeader.getQuantity());
             pstmt.setFloat(4, planHeader.getEstimatedEffort());
+
+            int rowsAffected = pstmt.executeUpdate();
+            isSuccess = (rowsAffected > 0);
+        } catch (SQLException | ClassNotFoundException ex) {
+            ex.printStackTrace();
+        }
+
+        return isSuccess;
+    }
+
+    public boolean editPlan(Plan plan) {
+        String query = "UPDATE [Plans] SET [plname] = ?, [startdate] = ?, [enddate] = ?, [did] = ? WHERE [plid] = ?";
+        boolean isSuccess = false;
+
+        try (PreparedStatement pstmt = DBUtils.getConnection1().prepareStatement(query)) {
+            pstmt.setString(1, plan.getPlName());
+            pstmt.setString(2, plan.getStartDate());
+            pstmt.setString(3, plan.getEndDate());
+            pstmt.setInt(4, plan.getdId());
+            pstmt.setInt(5, plan.getPlId());
 
             int rowsAffected = pstmt.executeUpdate();
             isSuccess = (rowsAffected > 0);

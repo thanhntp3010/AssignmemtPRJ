@@ -4,6 +4,8 @@
  */
 package controller;
 
+import dao.PlanDAO;
+import entity.Plan;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -27,6 +29,15 @@ public class EditPlanController extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         int id = Integer.parseInt(request.getParameter("id"));
+        String name = request.getParameter("name");
+        int did = Integer.parseInt(request.getParameter("did"));
+        String startDate = request.getParameter("startDate");
+        String endDate = request.getParameter("endDate");
+        
+        PlanDAO d = new PlanDAO();
+        
+        d.editPlan(new Plan(id, name, startDate, endDate, did));
+        response.sendRedirect("managePlan");
         
     }
 

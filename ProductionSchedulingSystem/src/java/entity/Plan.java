@@ -22,6 +22,14 @@ public class Plan {
         this.endDate = endDate;
         this.dId = dId;
     }
+
+    public Plan(int plId, String plName, String startDate, String endDate, int dId) {
+        this.plId = plId;
+        this.plName = plName;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.dId = dId;
+    }
     
 
     public Plan(int plId, String plName, String startDate, String endDate, int dId, Department department) {
