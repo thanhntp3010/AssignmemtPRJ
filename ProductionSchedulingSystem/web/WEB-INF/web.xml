@@ -16,6 +16,10 @@
         <servlet-name>EditPlanController</servlet-name>
         <servlet-class>controller.EditPlanController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>DeletePlanController</servlet-name>
+        <servlet-class>controller.DeletePlanController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>LogoutController</servlet-name>
         <url-pattern>/logout</url-pattern>
@@ -35,6 +39,10 @@
     <servlet-mapping>
         <servlet-name>EditPlanController</servlet-name>
         <url-pattern>/editPlan</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DeletePlanController</servlet-name>
+        <url-pattern>/deletePlan</url-pattern>
     </servlet-mapping>
     <welcome-file-list>
         <welcome-file>

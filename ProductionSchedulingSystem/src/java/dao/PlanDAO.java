@@ -135,4 +135,20 @@ public class PlanDAO {
         return isSuccess;
     }
 
+    public boolean deleteById(int planId) {
+        String query = "DELETE FROM [Plans] WHERE [plid] = ?";
+        boolean isSuccess = false;
+
+        try (PreparedStatement pstmt = DBUtils.getConnection1().prepareStatement(query)) {
+            pstmt.setInt(1, planId);
+
+            int rowsAffected = pstmt.executeUpdate();
+            isSuccess = (rowsAffected > 0);
+        } catch (SQLException | ClassNotFoundException ex) {
+            ex.printStackTrace();
+        }
+
+        return isSuccess;
+    }
+
 }
