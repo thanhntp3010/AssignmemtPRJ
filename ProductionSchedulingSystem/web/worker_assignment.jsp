@@ -1,3 +1,4 @@
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -31,11 +32,25 @@
             <h3>Danh sách công việc phân công</h3>
             <table id="assignedTasksTable">
                 <tr>
-                    <th>ID Công nhân</th>
-                    <th>Tên sản phẩm</th>
+                    <th>Kế hoạch</th>
+                    <th>Ngày bắt đầu</th>
+                    <th>Ngày kết thúc</th>
+                    <th>Công nhân</th>
+                    <th>Sản phẩm</th>
                     <th>Ca làm việc</th>
+                    <th>Số lượng</th>
                 </tr>
-
+                <c:forEach var="o" items="${list}">
+                    <tr>
+                        <td>${o.planName}</td>
+                        <td>${o.startDate}</td>
+                        <td>${o.endDate}</td>
+                        <td>${o.name}</td>
+                        <td>${o.productId}</td>
+                        <td>${o.shiftId}</td>
+                        <td>${o.employeeQuantity}</td>
+                    </tr>
+                </c:forEach>
             </table>
         </div>
     </body>

@@ -13,14 +13,16 @@
             <nav>
                 <ul>
                     <li><a href="managePlan">Quản Lý Kế Hoạch Sản Xuất</a></li>
-                    <li><a href="worker_assignment.jsp">Phân Công Công Việc</a></li>
+                        <c:if test="${sessionScope['LOGIN_USER'].roleId == 5}">
+                        <li><a href="workerAssignment">Phân Công Công Việc</a></li>
+                        </c:if>
                     <li><a href="attendance_tracking.jsp">Chấm Công Công Nhân</a></li>
                     <li><a href="monthly_report.jsp">Báo Cáo Lương Cuối Tháng</a></li>
                         <c:if test="${sessionScope['LOGIN_USER']!=null}">
                         <li><a style="color: black">Xin chào, ${sessionScope['LOGIN_USER'].username}</a></li>
                         <li><a href="logout">Đăng xuất</a></li>
-                    </c:if>
-                    <c:if test="${sessionScope['LOGIN_USER']==null}">
+                        </c:if>
+                        <c:if test="${sessionScope['LOGIN_USER']==null}">
                         <li><a href="login.jsp">Đăng Nhập</a></li>
 
                     </c:if>

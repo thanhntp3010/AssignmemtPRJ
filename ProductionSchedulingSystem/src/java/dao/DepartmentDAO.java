@@ -55,7 +55,30 @@ public class DepartmentDAO {
         } catch (SQLException | ClassNotFoundException ex) {
             Logger.getLogger(DepartmentDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return department; 
+        return department;
+    }
+
+    public Department getDepartmentByEid(int eid) {
+        Department department = null;
+        String query = "SELECT d.did, d.dname, d.type\n"
+                + "FROM Departments d JOIN Employees e\n"
+                + "ON d.did = e.did\n"
+                + "WHERE e.eid = ?";
+
+        try (PreparedStatement pstmt = DBUtils.getConnection1().prepareStatement(query)) {
+            pstmt.setInt(1, eid);
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                department = new Department();
+                department.setdId(rs.getInt("did"));
+                department.setdName(rs.getString("dname"));
+                department.setType(rs.getString("type"));
+            }
+        } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(DepartmentDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return department;
     }
 
 }

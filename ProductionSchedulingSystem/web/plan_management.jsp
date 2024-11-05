@@ -14,26 +14,28 @@
     <body>
         <div class="container">
             <jsp:include page="header.jsp"/>
-            <h2>Quản Lý Kế Hoạch Sản Xuất</h2>
-            <form action="addPlan" method="POST">
-                <label for="name">Tên kế hoạch</label>
-                <input type="text" id="name" name="name" required>
+            <c:if test="${sessionScope['LOGIN_USER'].roleId != 5}">
+                <h2>Quản Lý Kế Hoạch Sản Xuất</h2>
+                <form action="addPlan" method="POST">
+                    <label for="name">Tên kế hoạch</label>
+                    <input type="text" id="name" name="name" required>
 
-                <label for="department">Xưởng</label>
-                <select id="department" name="did">
-                    <c:forEach var="o" items="${departments}">
-                        <option value="${o.dId}">${o.dName}</option>
-                    </c:forEach>
-                </select><br>
+                    <label for="department">Xưởng</label>
+                    <select id="department" name="did">
+                        <c:forEach var="o" items="${departments}">
+                            <option value="${o.dId}">${o.dName}</option>
+                        </c:forEach>
+                    </select><br>
 
-                <label for="date">Ngày bắt đầu</label>
-                <input type="date" id="date" name="startDate" required>
+                    <label for="date">Ngày bắt đầu</label>
+                    <input type="date" id="date" name="startDate" required>
 
-                <label for="date">Ngày kết thúc</label>
-                <input type="date" id="date" name="endDate" required>
+                    <label for="date">Ngày kết thúc</label>
+                    <input type="date" id="date" name="endDate" required>
 
-                <button type="submit">Thêm Kế Hoạch</button>
-            </form>
+                    <button type="submit">Thêm Kế Hoạch</button>
+                </form>
+            </c:if>
 
             <h3>Danh sách kế hoạch sản xuất</h3>
             <table id="productionPlansTable" class="table table-striped">
@@ -44,7 +46,9 @@
                     <th>Ngày kết thúc</th>
                     <th>Gán đầu việc</th>
                     <th>Chi tiết</th>
-                    <th>Hành động</th>
+                        <c:if test="${sessionScope['LOGIN_USER'].roleId != 5}">
+                        <th>Hành động</th>
+                        </c:if>
                 </tr>
                 <c:forEach var="o" items="${plans}">
                     <tr>
@@ -62,15 +66,16 @@
                                 Chi tiết
                             </button>
                         </td>
-
-                        <td>
-                            <button type="button" class="btn btn-warning edit-plan-btn" data-toggle="modal" data-target="#editPlanModal" data-planid="${o.plId}" data-name="${o.plName}" data-department="${o.department.dId}" data-startdate="${o.startDate}" data-enddate="${o.endDate}">
-                                Sửa
-                            </button> 
-                            <button type="button" class="btn btn-danger delete-plan-btn" data-toggle="modal" data-target="#deletePlanModal" data-planid="${o.plId}">
-                                Xóa
-                            </button>
-                        </td>
+                        <c:if test="${sessionScope['LOGIN_USER'].roleId != 5}">
+                            <td>
+                                <button type="button" class="btn btn-warning edit-plan-btn" data-toggle="modal" data-target="#editPlanModal" data-planid="${o.plId}" data-name="${o.plName}" data-department="${o.department.dId}" data-startdate="${o.startDate}" data-enddate="${o.endDate}">
+                                    Sửa
+                                </button> 
+                                <button type="button" class="btn btn-danger delete-plan-btn" data-toggle="modal" data-target="#deletePlanModal" data-planid="${o.plId}">
+                                    Xóa
+                                </button>
+                            </td>
+                        </c:if>
                     </tr>
                 </c:forEach>
             </table>
