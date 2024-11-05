@@ -10,12 +10,14 @@ import dao.ProductDAO;
 import entity.Department;
 import entity.Plan;
 import entity.Product;
+import entity.User;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,15 +38,21 @@ public class ManagePlanController extends HttpServlet {
         List<Department> departments = new ArrayList<>();
         DepartmentDAO d = new DepartmentDAO();
         departments = d.getAllWorkshop();
-        
+
         ProductDAO pd = new ProductDAO();
         List<Product> products = new ArrayList<>();
         products = pd.getAllProduct();
-        
+
         PlanDAO pldao = new PlanDAO();
         List<Plan> plans = new ArrayList<>();
-        plans = pldao.getAllPlan();
-        
+        HttpSession session = request.getSession();
+        User user = (User) session.getAttribute("LOGIN_USER");
+        if (user.getRoleId() == 5) {
+            plans = pldao.getAllPlanByUserId(user.getUid());
+        } else {
+            plans = pldao.getAllPlan();
+        }
+
         request.setAttribute("departments", departments);
         request.setAttribute("products", products);
         request.setAttribute("plans", plans);

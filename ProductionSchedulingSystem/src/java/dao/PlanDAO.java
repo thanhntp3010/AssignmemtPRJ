@@ -44,6 +44,40 @@ public class PlanDAO {
         return plans;
     }
 
+    public List<Plan> getAllPlanByUserId(int userId) {
+        List<Plan> plans = new ArrayList<>();
+        String query = "SELECT p.* FROM [Plans] p\n"
+                + "JOIN Departments d ON d.did = p.did\n"
+                + "JOIN Employees e ON e.did = d.did\n"
+                + "JOIN Users u ON u.eid = e.eid\n"
+                + "JOIN UserRoles ur ON ur.uid = u.uid\n"
+                + "JOIN Roles r ON r.rid = ur.rid\n"
+                + "WHERE u.uid = ?";
+
+        try (PreparedStatement pstmt = DBUtils.getConnection1().prepareStatement(query)) {
+            pstmt.setInt(1, userId);
+            ResultSet rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                Plan plan = new Plan();
+                plan.setPlId(rs.getInt("plid"));
+                plan.setPlName(rs.getString("plname"));
+                plan.setStartDate(rs.getString("startdate"));
+                plan.setEndDate(rs.getString("enddate"));
+
+                int departmentId = rs.getInt("did");
+                DepartmentDAO departmentDAO = new DepartmentDAO();
+                Department department = departmentDAO.getDepartmentById(departmentId);
+                plan.setDepartment(department);
+
+                plans.add(plan);
+            }
+        } catch (SQLException | ClassNotFoundException ex) {
+            ex.printStackTrace();
+        }
+        return plans;
+    }
+
     public boolean addPlan(Plan plan) {
         String query = "INSERT INTO [Plans] ([plname], [startdate], [enddate], [did]) VALUES (?, ?, ?, ?)";
         boolean isSuccess = false;

@@ -17,7 +17,7 @@
                     <li><a href="attendance_tracking.jsp">Chấm Công Công Nhân</a></li>
                     <li><a href="monthly_report.jsp">Báo Cáo Lương Cuối Tháng</a></li>
                         <c:if test="${sessionScope['LOGIN_USER']!=null}">
-                        <li><a>Xin chào, ${sessionScope['LOGIN_USER'].username}</a></li>
+                        <li><a style="color: black">Xin chào, ${sessionScope['LOGIN_USER'].username}</a></li>
                         <li><a href="logout">Đăng xuất</a></li>
                     </c:if>
                     <c:if test="${sessionScope['LOGIN_USER']==null}">
