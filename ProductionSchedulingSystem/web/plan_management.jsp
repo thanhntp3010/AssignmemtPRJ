@@ -255,7 +255,7 @@
 
                     if (Array.isArray(response)) {
                         $.ajax({
-                            url: 'employee', 
+                            url: 'employee',
                             type: 'GET',
                             dataType: 'json',
                             success: function (employees) {
@@ -266,8 +266,8 @@
                                     var employeeOptions = "<option value=''>Chọn nhân viên</option>";
                                     if (Array.isArray(employees)) {
                                         employees.forEach(function (employee) {
-                                            employeeOptions += "<option value='" + employee.eid + "'>" + employee.ename + " - " +
-                                                  employee.sname  + "</option>";
+                                            employeeOptions += "<option value='" + employee.eid + "|" + employee.sid + "'>" + employee.ename + " - " +
+                                                    employee.sname + "</option>";
                                         });
                                     }
 
@@ -277,12 +277,13 @@
                                             "<td>" + task.quantity + "</td>" +
                                             "<td>" + task.estimatedEffort + "</td>" +
                                             "<td>" +
-                                            "<form action='assignTask' method='POST' class='assign-task-form'>" +
+                                            "<form action='assignWorker' method='POST' class='assign-task-form'>" +
                                             "<select class='form-control' name='employeeId' required>" +
-                                            employeeOptions + 
+                                            employeeOptions +
                                             "</select>" +
                                             "<input type='number' class='form-control' name='quantity' placeholder='Nhập số lượng' min='1' required />" +
-                                            "<input type='hidden' name='taskId' value='" + task.phId + "' />" + 
+                                            "<input type='date' class='form-control' name='date' placeholder='Nhập ngày' required />" +
+                                            "<input type='hidden' name='taskId' value='" + task.phId + "' />" +
                                             "<button type='submit' class='btn btn-primary mt-2'>Gán</button>" +
                                             "</form>" +
                                             "</td>" +

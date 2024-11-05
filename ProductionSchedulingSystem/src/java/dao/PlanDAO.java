@@ -6,8 +6,10 @@ package dao;
 
 import entity.Department;
 import entity.Plan;
+import entity.PlanDetail;
 import entity.PlanHeader;
 import entity.Product;
+import entity.WorkAssignment;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -175,6 +177,50 @@ public class PlanDAO {
 
         try (PreparedStatement pstmt = DBUtils.getConnection1().prepareStatement(query)) {
             pstmt.setInt(1, planId);
+
+            int rowsAffected = pstmt.executeUpdate();
+            isSuccess = (rowsAffected > 0);
+        } catch (SQLException | ClassNotFoundException ex) {
+            ex.printStackTrace();
+        }
+
+        return isSuccess;
+    }
+
+    public Integer createPlanDetail(PlanDetail planDetail) {
+        String query = "INSERT INTO [PlanDetails] ([phid], [sid], [date], [quantity]) VALUES (?, ?, ?, ?)";
+        Integer generatedId = null;
+
+        try (PreparedStatement pstmt = DBUtils.getConnection1().prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS)) {
+            pstmt.setInt(1, planDetail.getPhId());
+            pstmt.setInt(2, planDetail.getSid());
+            pstmt.setString(3, planDetail.getDate());
+            pstmt.setInt(4, planDetail.getQuantity());
+
+            int rowsAffected = pstmt.executeUpdate();
+
+            if (rowsAffected > 0) {
+                try (ResultSet generatedKeys = pstmt.getGeneratedKeys()) {
+                    if (generatedKeys.next()) {
+                        generatedId = generatedKeys.getInt(1); 
+                    }
+                }
+            }
+        } catch (SQLException | ClassNotFoundException ex) {
+            ex.printStackTrace();
+        }
+
+        return generatedId;
+    }
+
+    public boolean createWorkAssignment(WorkAssignment workAssignment) {
+        String query = "INSERT INTO [WorkAssignments] ([pdid], [eid], [quantity]) VALUES (?, ?, ?)";
+        boolean isSuccess = false;
+
+        try (PreparedStatement pstmt = DBUtils.getConnection1().prepareStatement(query)) {
+            pstmt.setInt(1, workAssignment.getPdId());
+            pstmt.setInt(2, workAssignment.getEid());
+            pstmt.setInt(3, workAssignment.getQuantity());
 
             int rowsAffected = pstmt.executeUpdate();
             isSuccess = (rowsAffected > 0);

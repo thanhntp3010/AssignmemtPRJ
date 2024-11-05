@@ -4,13 +4,15 @@
  */
 package controller;
 
+import dao.PlanDAO;
+import entity.PlanDetail;
+import entity.WorkAssignment;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
 
 public class AssignWorkerController extends HttpServlet {
 
@@ -26,11 +28,30 @@ public class AssignWorkerController extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        int productId = Integer.parseInt(request.getParameter("productId"));
-        int employeeId = Integer.parseInt(request.getParameter("employeeId"));
+        String employeeIdString = request.getParameter("employeeId");
+        int employeeId = 0;
+        int sId = 0;
+        
+        if (employeeIdString != null && !employeeIdString.isEmpty()) {
+            String[] ids = employeeIdString.split("\\|");
+            if (ids.length == 2) {
+                 employeeId = Integer.parseInt(ids[0]); 
+                 sId = Integer.parseInt(ids[1]); 
+            } else {
+                System.out.println("Invalid employeeId format");
+            }
+        }
         int quantity = Integer.parseInt(request.getParameter("quantity"));
+        int planHeaderId = Integer.parseInt(request.getParameter("taskId"));
+
+        String date1 = request.getParameter("date");
         
+        PlanDAO d = new PlanDAO();
+        int x = d.createPlanDetail(new PlanDetail(0, planHeaderId, sId, date1, quantity));
+        d.createWorkAssignment(new WorkAssignment(0,x , employeeId, quantity));
         
+        response.sendRedirect("managePlan");
+
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
