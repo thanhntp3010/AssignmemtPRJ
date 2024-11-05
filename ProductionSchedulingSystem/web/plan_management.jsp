@@ -45,8 +45,11 @@
                     <th>Ngày bắt đầu</th>
                     <th>Ngày kết thúc</th>
                     <th>Gán đầu việc</th>
-                    <th>Chi tiết</th>
-                        <c:if test="${sessionScope['LOGIN_USER'].roleId != 5}">
+                        <c:if test="${sessionScope['LOGIN_USER'].roleId == 5}">
+                        <th>Chi tiết</th>
+
+                    </c:if>
+                    <c:if test="${sessionScope['LOGIN_USER'].roleId != 5}">
                         <th>Hành động</th>
                         </c:if>
                 </tr>
@@ -61,11 +64,13 @@
                                 Gán đầu việc
                             </button>
                         </td>
-                        <td>
-                            <button type="button" class="btn btn-info view-detail-btn" data-toggle="modal" data-target="#viewDetailModal" data-planid="${o.plId}">
-                                Chi tiết
-                            </button>
-                        </td>
+                        <c:if test="${sessionScope['LOGIN_USER'].roleId == 5}">
+                            <td>
+                                <button type="button" class="btn btn-info view-detail-btn" data-toggle="modal" data-target="#viewDetailModal" data-planid="${o.plId}">
+                                    Chi tiết
+                                </button>
+                            </td>
+                        </c:if>
                         <c:if test="${sessionScope['LOGIN_USER'].roleId != 5}">
                             <td>
                                 <button type="button" class="btn btn-warning edit-plan-btn" data-toggle="modal" data-target="#editPlanModal" data-planid="${o.plId}" data-name="${o.plName}" data-department="${o.department.dId}" data-startdate="${o.startDate}" data-enddate="${o.endDate}">
@@ -222,6 +227,7 @@
                                 <th>Sản Phẩm</th>
                                 <th>Số Lượng</th>
                                 <th>Ước Lượng Công Việc</th>
+                                <th>Gán Nhân Viên</th>
                             </tr>
                         </thead>
                         <tbody id="taskDetailsBody">
@@ -248,13 +254,48 @@
                     $('#taskDetailsBody').empty();
 
                     if (Array.isArray(response)) {
-                        response.forEach(function (task) {
-                            console.log("Task:", task);
+                        $.ajax({
+                            url: 'employee', 
+                            type: 'GET',
+                            dataType: 'json',
+                            success: function (employees) {
+                                console.log("Employees:", employees);
+                                response.forEach(function (task) {
+                                    console.log("Task:", task);
 
-                            var row = "<tr><td>" + task.phId + "</td><td>" + task.productName + "</td><td>" + task.quantity + "</td><td>" + task.estimatedEffort + "</td></tr>";
+                                    var employeeOptions = "<option value=''>Chọn nhân viên</option>";
+                                    if (Array.isArray(employees)) {
+                                        employees.forEach(function (employee) {
+                                            employeeOptions += "<option value='" + employee.eid + "'>" + employee.ename + " - " +
+                                                  employee.sname  + "</option>";
+                                        });
+                                    }
 
-                            $('#taskDetailsBody').append(row);
-                            console.log(row);
+                                    var row = "<tr>" +
+                                            "<td>" + task.phId + "</td>" +
+                                            "<td>" + task.productName + "</td>" +
+                                            "<td>" + task.quantity + "</td>" +
+                                            "<td>" + task.estimatedEffort + "</td>" +
+                                            "<td>" +
+                                            "<form action='assignTask' method='POST' class='assign-task-form'>" +
+                                            "<select class='form-control' name='employeeId' required>" +
+                                            employeeOptions + 
+                                            "</select>" +
+                                            "<input type='number' class='form-control' name='quantity' placeholder='Nhập số lượng' min='1' required />" +
+                                            "<input type='hidden' name='taskId' value='" + task.phId + "' />" + 
+                                            "<button type='submit' class='btn btn-primary mt-2'>Gán</button>" +
+                                            "</form>" +
+                                            "</td>" +
+                                            "</tr>";
+
+                                    $('#taskDetailsBody').append(row);
+                                    console.log(row);
+                                });
+                            },
+                            error: function (xhr, status, error) {
+                                console.error("Error loading employees:", status, error);
+                                alert('Không thể tải danh sách nhân viên.');
+                            }
                         });
                     } else {
                         console.warn("Response is not an array");
@@ -266,8 +307,9 @@
                 }
             });
         });
-
     </script>
+
+
 
 
 </html>
